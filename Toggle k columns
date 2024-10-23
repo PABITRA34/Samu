@@ -1,0 +1,27 @@
+using namespace std;
+int n,m,k;
+
+int main() {
+    cin>>n>>m>>k;
+    unordered_map<string,int>mp;
+    for(int i=0;i<n;i++){
+        string s;
+        for(int j=0;j<m;j++){
+            char ch;cin>>ch;
+            s.push_back(ch);
+        }
+        mp[s]++;
+    }
+    // max freq of string having same init config
+    // due to xor property: (k-zero)%==0 && k>=zero
+    int ans=0;
+    for(auto &it: mp){
+        int zero=0;
+        for(auto &iit:it.first) zero+=(iit=='0');
+        if((k-zero)%2==0 && k>=zero){
+            ans= max(ans, it.second);
+        }        
+    }
+    cout<<ans<<"\n";
+    return 0;
+}

@@ -1,0 +1,58 @@
+#include <iostream>
+using namespace std;
+int adj[11][11];
+int pathVis[11], vis[11];
+int cyclePath[11],sum[11];
+int cycleLen,n,m;
+int mini=1e9;
+void dfs(int node,int par){
+    vis[node]=1;
+    pathVis[node]=pathVis[par]+1;
+    sum[node]+=node+sum[par];
+    for(int nbr=1;nbr<=n;nbr++){
+        //IMP : don't put cond: nbr==par --->continue in cycle detection question
+        if(adj[node][nbr]==-1) continue;// no edge
+        if(pathVis[nbr]){// its a cycle 
+            int cycleSum= sum[node]-sum[nbr]+nbr;
+            if(cycleSum<mini){
+                mini=cycleSum;              
+                // nodes in the cycle
+                int idx=0;
+                for(int i=1;i<=n;i++){
+                    if(pathVis[i]>=pathVis[nbr] && pathVis[i]<=pathVis[node]){
+                        cyclePath[idx++]=i;
+                    }
+                }
+               cycleLen=idx;
+            }        
+        }
+      else if(!pathVis[nbr]) dfs(nbr,node);
+    }   
+    // while returning from dfs call make pathvis [node]=false;
+    pathVis[node]=0;
+    sum[node]=0;
+}
+int main() {
+    cycleLen=0;
+    cin>>n>>m;
+     for(int i=0;i<11;i++){
+         for(int j=0;j<11;j++){
+             adj[i][j]=-1;
+         }
+     }
+    for(int i=0;i<m;i++){
+        int u,v; cin>>u>>v;
+        adj[u][v]=1;        
+    }
+
+    // for handle the edge case when the graph is divided into multiple components
+    for(int i=1;i<=n;i++){
+        dfs(i,0);// o is the par
+    }
+    // print the optimal cycle nodes
+    for(int i=0;i<cycleLen;i++){
+        cout<<cyclePath[i]<<" ";
+    }
+    cout<<endl;
+    return 0;
+}

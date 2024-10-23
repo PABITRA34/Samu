@@ -1,0 +1,35 @@
+class Solution {
+public:
+/*
+New pattern learnt: use numbers as the indices
+[1,n]
+corner case: 
+. if list doesn't contain 1 answer is 1
+. Replace the numbers out of this range[1,n] as 1
+. visist the idx = abs(nums[i] -1) and mark the val at nums[idx] as -ve if not 
+. final iteration : check if any element is positive , it means number =(idx +1) was absent
+. if all are negative in the final iteration it meeans n+1 is the answer
+
+*/
+    int firstMissingPositive(vector<int>& nums) {
+        int n= nums.size();
+        bool contains1 =0;
+          // Now replace the elements out the range with 1
+        for(auto &it: nums) {
+            if(it==1)   contains1 =1;          
+             if(it<=0 || it>n) it=1;            
+        }
+        if(contains1 ==0) return 1;     
+         // visist the idx = abs(nums[i] -1) and mark the val at nums[idx] as -ve if not 
+        for(int i=0; i<n; i++){
+            int idx = abs(nums[i]) -1;
+            if(nums[idx]>0) nums[idx] =-nums[idx];
+        }
+         for(auto &it: nums) cout<<it<<" ";
+        //final iteration : check if any element is positive , it means number =(idx +1) was absent
+        for(int i=0; i<n; i++){
+            if(nums[i]>0) return i+1;
+        }
+        return n+1;
+    }
+};

@@ -124,6 +124,120 @@ Output -
 15
 4
 */
+///
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+using namespace std;
+int n, rc; 
+int front=-1, rear=-1;
+struct queue{
+    int r,c;
+}q[10000];
+int g[22][22], dist[22][22];
+int rloc[5][2];
+void init(){
+    front=-1; rear=-1;
+    for(int i=0;i<22;i++){
+        for(int j=0;j<22;j++){
+            dist[i][j]=0;
+        }
+    }
+    for(int i=0;i<10000;i++){
+        q[i].r=0;
+        q[i].c=0;
+    }
+}
+void solve(int i, int j, int d){
+    int cc=0;
+    for(int k=0;k<rc;k++){
+        if(dist[rloc[k][0]][rloc[k][1]] >0) cc++;
+    }
+    if(cc>=rc) return;
+    // up call
+    if(i-1>=1 && dist[i-1][j]==0 && (g[i-1][j]==1 || g[i-1][j]==3)){
+        dist[i-1][j]= d +1;
+        rear++;
+        q[rear].r=i-1;
+        q[rear].c=j;
+    }
+    // down
+        if(i+1<=n && dist[i+1][j]==0 && (g[i+1][j]==1 || g[i+1][j]==3)){
+        dist[i+1][j]= d +1;
+        rear++;
+        q[rear].r=i+1;
+        q[rear].c=j;
+    }
+    // left
+        if(j-1>=1 && dist[i][j-1]==0 && (g[i][j-1]==1 || g[i][j-1]==3)){
+        dist[i][j-1]= d +1;
+        rear++;
+        q[rear].r=i;
+        q[rear].c=j-1;
+    }
+    // right
+        if(j+1 <=n && dist[i][j+1]==0 && (g[i][j+1]==1 || g[i][j+1]==3)){
+        dist[i][j+1]= d +1;
+        rear++;
+        q[rear].r=i;
+        q[rear].c=j+1;
+    }
+    // recur
+    while(front < rear){
+        front++;
+        int ni= q[front].r, nj= q[front].c;
+        solve(ni, nj, dist[ni][nj]);
+    }
+}
+int main()
+{
+   int t; cin>>t;
+   init();
+   while(t--){
+       cin>>n>>rc;
+       for(int i=0;i<rc;i++){
+           cin>>rloc[i][0]>>rloc[i][1];
+       }
+       for(int i=1;i<=n;i++){
+           for(int j=1;j<=n;j++){
+               cin>>g[i][j];
+           }
+       }
+       // mark metal centres with flg 3 
+       for(int i=0;i<rc;i++){
+           g[rloc[i][0]][rloc[i][1]]=3;
+       }
+       int ans=100000000;
+       for(int i=1;i<=22;i++){
+           for(int j=1;j<=22;j++){
+               if(g[i][j]==1){
+                   dist[i][j]=1;
+                   int maxi=0;
+                   init();
+                   solve(i,j,1);// start timer by 1
+                   for(int k=0;k<rc;k++){
+                       if(dist[rloc[k][0]][rloc[k][1]] > maxi) maxi= dist[rloc[k][0]][rloc[k][1]];
+                   }
+                   ans= min(ans,maxi);
+               }
+           }
+       }
+       cout<<ans-1<<"\n";
+   }
+
+    return 0;
+}
+
+
+
+
+///
 
 #include <stdio.h>
 int Answer = 9999;

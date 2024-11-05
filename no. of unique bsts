@@ -1,0 +1,87 @@
+Unique Binary Search Trees
+Solved
+Medium
+Topics
+Companies
+Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.
+
+ 
+
+Example 1:
+
+
+Input: n = 3
+Output: 5
+Example 2:
+
+Input: n = 1
+Output: 1
+ 
+
+Constraints:
+
+1 <= n <= 19
+
+
+class Solution {
+public:
+//  dp[i]-># of bsts of length=i
+// in order to calculate the # of bsts of len=n ,everyone int from 1 till n will get a chance to beome the root
+// l{x bsts} .... root .....r{y bsts} so # of bsts with this root=x*y(cross of left and right bsts)
+    int numTrees(int n) {
+        vector<int>dp=vector(n+1,0);
+        dp[0]=1;// # of empty rooted bst tree
+        dp[1]=1;// # of bst of len=1
+
+        for(int len=2;len<=n;len++){
+            for(int root=1;root<=len;root++){
+                int left_bst=root-1;
+                int  right_bst=len-root;
+                dp[len] +=dp[left_bst] * dp[ right_bst];
+            }
+        }
+        return dp[n];
+    }
+};
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+ /* To pring the all the binary search trees if asked
+class Solution {
+public:
+ vector<TreeNode*> builder(int s,int e){
+     if(s>e) {
+          vector<TreeNode*>base;
+          base.push_back(NULL);
+          return base;
+     }
+  vector<TreeNode*>bsts;
+     for(int root=s;root<=e;root++){
+          vector<TreeNode*>left_subtrees=builder(s,root-1);
+           vector<TreeNode*>right_subtrees=builder(root+1,e);
+
+           for(auto left_tree:left_subtrees){
+               for(auto right_tree:right_subtrees){
+                   TreeNode* newroot= new TreeNode(root);
+                   newroot->left=left_tree;
+                   newroot->right=right_tree;
+                   bsts.push_back(newroot);
+               }
+           }
+     }
+     return bsts;
+ }
+    // vector<TreeNode*> generateTrees(int n) {
+    int numTrees(int n) {
+        return builder(1,n).size();
+    }
+};*/

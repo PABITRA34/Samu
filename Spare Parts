@@ -1,0 +1,171 @@
+Product Manufacturing 6
+
+A company has to produce IOT products of different models,
+Each product requires cpus,memories and boards. After production of models, some spare equipments may be left.
+In these, cpus and memories can be sold as spare parts but boards cannot be sold.
+Due to manufacturing constraints maximum 3 models can be produced.
+Each product can be sold at the cost of its model.
+Given N different models.
+D cpus with price d each.
+E memories with price e each.
+F boards.
+
+Input:-
+T number of testcases, followed by testcases,
+Each test case consists of
+D total  number of cpus available.
+E total number of memories available.
+F total number of boards available.
+N number of models followed by N lines consisting of
+ai, bi, ci and pi where ai is the number of cpus,bi number of memories, ci number of boards
+required for producing one unit of that model and pi is the selling price of the one unit of that model.
+
+Output:-
+Print the testcase number followed by the Maximum profit that can be made.
+
+Note:- Maximum profit can also be attained without any production that is by just selling  its components.
+
+Constraints:-
+1 ≤ N ≤ 8,  1 ≤ D,E,F ≤ 100,  1 ≤ d,e ≤ 10,  1 ≤ ai,bi,ci ≤ 5,  1 ≤ pi ≤ 100
+
+Complexity
+----------------------
+
+Simply question is :
+	we need to choose up to 3 out of 8 (0-3)products, 
+Answer = Value of products+ remaining CPU*CPU_COST+remaining MEMORY*MEM_COST
+
+Lets try to calculate complexity for brute force approach.
+
+1.We need to choose max 3 out of 8 products, so for that complexity is 8c3=56
+
+2. (taking product-1 out of chosen products from 0 to MAX possible if we take only this product)*(taking product-1 out of chosen products from 0 to MAX possible if we take only this product)*(taking product-1 out of chosen products from 0 to MAX possible if we take only this product) = (100*100*100)
+ 
+So final complexity is  = 8c3*100*100*100 < 10^9.
+
+3. So If complexity is less than 10^9 we can freely go ahead
+
+
+Input:
+--------
+7
+2 2 2 1 1
+1
+2 2 2 6
+5 10 10 1 1       
+2
+2 1 1 8
+1 1 1 6
+10 10 10 2 1      
+1
+1 2 2 3
+4 6 4 2 1         
+4
+2 4 2 9
+1 3 1 7
+2 1 1 8
+1 2 2 6
+40 80 60 1 3      
+7
+3 2 2 56
+5 4 2 12
+3 5 3 65
+1 2 5 78
+5 5 2 85
+4 2 3 76
+5 5 1 48
+100 100 100  6 10      
+8
+3 3 1 74
+2 3 1 41
+3 2 1 64
+2 2 3 68
+2 2 2 71
+2 3 2 66
+2 3 3 84
+3 3 1 48 
+100 100 100 1 1
+8
+1 1 1 1
+1 1 1 1
+1 1 1 1
+1 1 1 1
+1 1 1 1
+1 1 1 1
+1 1 1 1
+1 1 1 1
+
+Output:
+
+#1 6
+#2 35
+#3 30
+#4 21
+#5 1338
+#6 3550
+#7 200
+
+--------------------------------------------
+Time taken including input reding.
+#1  time = 0.002
+#2 time = 0.002
+#3 time = 0.001
+#4 time = 0.003
+#5 time = 0.064
+#6 time = 0.203
+#7 time = 0.001
+
+Precautions to take care:
+--------------------------------
+
+1.Question asked is we need to choose up to 3 out of 8 products, means we can choose no product also and sell all individual components.
+
+2. When choosing a product we need to check whether the component I am spending for this product worth more than if I sell individual products, if not ignore product completely
+
+3.When we apply 3 for loops to generate 8c3 combination, we need to consider N<3 also
+
+4. Always calculate time roughly before selecting approach as explained above.
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+#define mod 1000000007
+#define all(v) v.begin(),v.end()
+#define endl '\n'
+signed main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    int t;cin>>t;while(t--){
+        int D,E,F,d,e;
+        cin>>D>>E>>F>>d>>e;
+        int N;
+        cin>>N;
+        vector<int>a,b,c,p;
+        for(int i=0;i<N;i++){
+            int ai,bi,ci,pi;
+            cin>>ai>>bi>>ci>>pi;
+            a.push_back(ai);
+            b.push_back(bi);
+            c.push_back(ci);
+            p.push_back(pi);
+        }
+        if(N<=3){
+            int spareProfit = D*d + E*e;
+            int profit=0;
+            profit= accumulate(p.begin(),p.end(),0);
+            // cout<<profit<<endl;
+            if(spareProfit > profit){
+                cout<<spareProfit<<endl;
+            }
+            else{
+                cout<<profit<<endl;
+            }
+        }
+        else{
+            cout<<-1<<endl;
+        }
+    }
+}

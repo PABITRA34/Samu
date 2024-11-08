@@ -127,6 +127,127 @@ Output -
 ///
 /******************************************************************************
 
+
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+vector<vector<int>>vis, dist, g;
+int n, rc;
+void reset(){
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=n;j++){
+            vis[i][j]=0;
+            dist[i][j]=-1;
+        }
+    }
+}
+bool safe(int i, int j ){
+    return (i>=1 && i<=n && j>=1 && j<=n && vis[i][j]==0 && g[i][j]==1);
+}
+void bfs(int x,int y){
+    int dr[4]={0,0,-1,1};
+    int dc[4]={1,-1,0,0};
+    queue< pair< int, pair<int,int>>>q;
+    q.push({0,{x,y}});
+    vis[x][y]=1;
+    dist[x][y]=0;
+    while(!q.empty()){
+        auto curr= q.front();
+        q.pop();
+        int i= curr.second.first;
+        int j= curr.second.second;
+        int dd= curr.first;
+        for(int d=0;d<4;d++){
+            int ni= i+ dr[d];
+            int nj= j+ dc[d];
+            if(safe(ni,nj)){
+                q.push({dd+1,{ni,nj}});
+                vis[ni][nj]=1;
+                dist[ni][nj]= dd+1;
+            }
+        }
+    }
+    
+}
+int main()
+{
+     int t; cin>>t;
+     while(t--){
+         cin>>n>>rc;
+         // clear the previous outputs , otherwise may return previos outputs or random behaviour 
+         // whenever using global variables must clear  , it is because of global variables lost one big opportunity
+         g.clear();
+         vis.clear();
+         dist.clear();
+          g.resize(n+1, vector<int>(n+1,0));
+          vis.resize(n+1, vector<int>(n+1,0));
+          dist.resize(n+1, vector<int>(n+1,-1));
+         reset();
+         
+         vector<int>x(rc+1,-1), y(rc+1,-1);
+         for(int i=1;i<=rc;i++){
+             cin>>x[i]>>y[i];
+         }
+        
+         for(int i=1;i<=n;i++){
+             for(int j=1;j<=n;j++){
+                 cin>>g[i][j];
+             }
+         }
+         int ans=1e9;
+         // bfs 
+         int cnt=1;
+         for(int i=1;i<=n;i++){
+             for(int j=1;j<=n;j++){
+                 if(g[i][j]==1){
+                     reset();
+                     bfs(i,j);
+                     int maxi=-1;
+                     for(int k=1;k<=rc;k++){
+                        maxi= max(maxi, dist[x[k]][y[k]]);
+                     }
+                     if(maxi>0 ) ans = min(ans, maxi);
+                 }
+             }
+         }
+         
+         cout<<ans<<"\n";
+     }
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Welcome to GDB Online.
 GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
 C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
